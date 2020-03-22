@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <h3>Add new shop</h3>
+        <form th:action="@{/add_shop}" method="POST" th:object="${new_shop}">
+            <p>
+                Name: <input type="text" name="name" placeholder="Name" th:field="*{name}"/>
+                <span style="color: red;" th:errors="*{name}">name error</span>
+            </p>
+            <p>
+                Location: <input type="text" name="location" placeholder="Location" th:field="*{location}"/>
+                <span style="color: red;" th:errors="*{location}">name error</span>
+            </p>
+            <p><input type="submit" value="Add Shop"/></p>
+        </form>
+        <a th:href="@{/shops}">Back</a>
+    </body>
+</html>

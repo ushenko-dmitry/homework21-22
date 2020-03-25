@@ -7,14 +7,14 @@ import ru.mail.dimaushenko.repository.ItemRepository;
 import ru.mail.dimaushenko.repository.ShopRepository;
 import ru.mail.dimaushenko.repository.model.Item;
 import ru.mail.dimaushenko.repository.model.Shop;
-import ru.mail.dimaushenko.service.ItemConvertService;
+import ru.mail.dimaushenko.service.ConverterFacade;
+import ru.mail.dimaushenko.service.ItemConverter;
 import ru.mail.dimaushenko.service.ItemService;
-import ru.mail.dimaushenko.service.ShopConvertService;
+import ru.mail.dimaushenko.service.ShopConverter;
 import ru.mail.dimaushenko.service.model.AddItemDTO;
 import ru.mail.dimaushenko.service.model.ItemDTO;
 import ru.mail.dimaushenko.service.model.ItemWithShopsDTO;
 import ru.mail.dimaushenko.service.model.ShopDTO;
-import ru.mail.dimaushenko.service.model.ShopWithItemsDTO;
 
 @Service
 @Transactional
@@ -22,46 +22,47 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final ShopRepository shopRepository;
-    private final ItemConvertService itemConvertService;
-    private final ShopConvertService shopConvertService;
+    private final ConverterFacade converter;
 
     public ItemServiceImpl(
             ItemRepository itemRepository,
             ShopRepository shopRepository,
-            ItemConvertService itemConvertService,
-            ShopConvertService shopConvertService
+            ConverterFacade converterFacade
     ) {
         this.itemRepository = itemRepository;
         this.shopRepository = shopRepository;
-        this.itemConvertService = itemConvertService;
-        this.shopConvertService = shopConvertService;
+        this.converter = converterFacade;
     }
 
     @Override
     public void addItemWithShop(AddItemDTO itemDTO) {
         Shop shop = shopRepository.findById(itemDTO.getShopId());
-        Item item = itemConvertService.getObjectFromDTO(itemDTO);
+        ItemConverter itemConverter = converter.getItemConverter();
+        Item item = itemConverter.getObjectFromDTO(itemDTO);
         shop.getItems().add(item);
-        ShopWithItemsDTO shopWithItemsDTO = shopConvertService.getShopWithItemsDTOFromObject(shop);
+        ShopConverter shopConverter = converter.getShopConverter();
+        shopConverter.getShopWithItemsDTOFromObject(shop);
     }
 
     @Override
     public List<ItemDTO> getItemWithItemDetails() {
         List<Item> items = itemRepository.findAll();
-        List<ItemDTO> itemDTOs = itemConvertService.getDTOFromObject(items);
+        ItemConverter itemConverter = converter.getItemConverter();
+        List<ItemDTO> itemDTOs = itemConverter.getDTOFromObject(items);
         return itemDTOs;
     }
 
     @Override
     public ItemWithShopsDTO getItemWithShopsById(Long id) {
         Item item = itemRepository.findById(id);
-        ItemWithShopsDTO itemWithShopsDTOs = itemConvertService.getItemWithShopsDTOFromItem(item);
-        boolean isFound = false;
+        ItemConverter itemConverter = converter.getItemConverter();
+        ItemWithShopsDTO itemWithShopsDTOs = itemConverter.getItemWithShopsDTOFromItem(item);
         List<Shop> shops = shopRepository.findAll();
+        ShopConverter shopConverter = converter.getShopConverter();
         for (Shop shop : shops) {
             for (Item shopItem : shop.getItems()) {
                 if (shopItem.getId().equals(id)) {
-                    ShopDTO shopDTO = shopConvertService.getDTOFromObject(shop);
+                    ShopDTO shopDTO = shopConverter.getDTOFromObject(shop);
                     itemWithShopsDTOs.getShops().add(shopDTO);
                 }
             }

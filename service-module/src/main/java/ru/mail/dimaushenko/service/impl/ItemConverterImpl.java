@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import ru.mail.dimaushenko.repository.model.Item;
 import ru.mail.dimaushenko.repository.model.ItemDetails;
 import ru.mail.dimaushenko.service.model.ItemDTO;
-import ru.mail.dimaushenko.service.ItemConvertService;
 import ru.mail.dimaushenko.service.model.AddItemDTO;
 import ru.mail.dimaushenko.service.model.ItemDetailsDTO;
 import ru.mail.dimaushenko.service.model.ItemWithShopsDTO;
+import ru.mail.dimaushenko.service.ItemConverter;
 
 @Component
-public class ItemConvertServiceImpl implements ItemConvertService {
+public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public ItemDTO getDTOFromObject(Item item) {

@@ -5,7 +5,8 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import ru.mail.dimaushenko.repository.ShopRepository;
 import ru.mail.dimaushenko.repository.model.Shop;
-import ru.mail.dimaushenko.service.ShopConvertService;
+import ru.mail.dimaushenko.service.ConverterFacade;
+import ru.mail.dimaushenko.service.ShopConverter;
 import ru.mail.dimaushenko.service.ShopService;
 import ru.mail.dimaushenko.service.model.ShopDTO;
 import ru.mail.dimaushenko.service.model.ShopWithItemsDTO;
@@ -15,32 +16,38 @@ import ru.mail.dimaushenko.service.model.ShopWithItemsDTO;
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
-    private final ShopConvertService shopConvertService;
+    private final ConverterFacade converter;
 
-    public ShopServiceImpl(ShopRepository shopRepository, ShopConvertService shopConvertService) {
+    public ShopServiceImpl(
+            ShopRepository shopRepository,
+            ConverterFacade converterFacade
+    ) {
         this.shopRepository = shopRepository;
-        this.shopConvertService = shopConvertService;
+        this.converter = converterFacade;
     }
 
     @Override
     public List<ShopDTO> getShops() {
         List<Shop> shops = shopRepository.findAll();
-        List<ShopDTO> shopDTOs = shopConvertService.getDTOFromObject(shops);
+        ShopConverter shopConverter = converter.getShopConverter();
+        List<ShopDTO> shopDTOs = shopConverter.getDTOFromObject(shops);
         return shopDTOs;
     }
 
     @Override
     public List<ShopWithItemsDTO> getShopsWithItems() {
         List<Shop> shops = shopRepository.findAll();
-        List<ShopWithItemsDTO> shopDTOs = shopConvertService.getShopWithItemsDTOFromObject(shops);
+        ShopConverter shopConverter = converter.getShopConverter();
+        List<ShopWithItemsDTO> shopDTOs = shopConverter.getShopWithItemsDTOFromObject(shops);
         return shopDTOs;
     }
 
     @Override
     public ShopDTO addShop(ShopDTO shopDTO) {
-        Shop shop = shopConvertService.getObjectFromDTO(shopDTO);
+        ShopConverter shopConverter = converter.getShopConverter();
+        Shop shop = shopConverter.getObjectFromDTO(shopDTO);
         shopRepository.persist(shop);
-        return shopConvertService.getDTOFromObject(shop);
+        return shopConverter.getDTOFromObject(shop);
     }
 
 }

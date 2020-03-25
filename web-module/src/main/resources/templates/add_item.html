@@ -7,7 +7,7 @@
     <body>
         <div style="margin: 15px;">
             <h2>Add new item</h2>
-            <form method="POST" th:action="@{/add_item}" th:object="${new_item}">
+            <form method="POST" th:action="@{/items/add}" th:object="${new_item}">
                 <p>
                     Name: <input type="text" name="name" placeholder="Name" th:field="*{name}"/>
                     <span th:errors="*{name}">name error</span>
@@ -19,7 +19,7 @@
                 <p>
                     Price: <input type="text" name="price" placeholder="Price" th:field="*{itemDetails.price}"/>
                 </p>
-                Shop: <select th:field="*{shopId}">
+                Shop: <select th:field="*{shopId}" multiple="multiple">
                     <th:block th:each="shop : ${shops}">
                         <option th:value="${shop.id}" th:text="${shop.name}"></option>
                     </th:block>

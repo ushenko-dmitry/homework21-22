@@ -6,7 +6,7 @@
     </head>
     <body>
         <h3>Add new shop</h3>
-        <form th:action="@{/add_shop}" method="POST" th:object="${new_shop}">
+        <form th:action="@{/shops/add}" method="POST" th:object="${new_shop}">
             <p>
                 Name: <input type="text" name="name" placeholder="Name" th:field="*{name}"/>
                 <span style="color: red;" th:errors="*{name}">name error</span>

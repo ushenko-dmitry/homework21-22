@@ -19,10 +19,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userService")
     private UserService userService;
 
-    public SecurityConfig(UserService userService) {
-        this.userService = userService;
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

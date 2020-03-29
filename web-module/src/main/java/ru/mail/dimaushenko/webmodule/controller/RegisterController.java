@@ -55,7 +55,7 @@ public class RegisterController {
 
     private void logErrors(List<ObjectError> allErrors) {
         for (ObjectError error : allErrors) {
-            logger.error("Error with add item: " + error.getObjectName() + " - " + error.getDefaultMessage());
+            logger.error("Error with register user: " + error.getObjectName() + " - " + error.getDefaultMessage());
         }
     }
 

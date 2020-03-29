@@ -5,22 +5,13 @@ import javax.validation.constraints.Size;
 
 public class AddItemDTO {
 
-    private Long id;
     @NotNull
     @Size(min = 1, max = 40)
     private String name;
     @Size(min = 0, max = 255)
     private String description;
-    private ItemDetailsDTO itemDetails;
-    private Long shopId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String price;
+    private Long[] shopId;
 
     public String getName() {
         return name;
@@ -38,19 +29,19 @@ public class AddItemDTO {
         this.description = description;
     }
 
-    public ItemDetailsDTO getItemDetails() {
-        return itemDetails;
+    public String getPrice() {
+        return price;
     }
 
-    public void setItemDetails(ItemDetailsDTO itemDetailsDTO) {
-        this.itemDetails = itemDetailsDTO;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public Long getShopId() {
+    public Long[] getShopId() {
         return shopId;
     }
 
-    public void setShopId(Long shopId) {
+    public void setShopId(Long[] shopId) {
         this.shopId = shopId;
     }
 

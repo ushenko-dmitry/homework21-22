@@ -39,4 +39,9 @@ public class ItemDTO {
         this.itemDetails = itemDetailsDTO;
     }
 
+    @Override
+    public String toString() {
+        return "ItemDTO{" + "id=" + id + ", name=" + name + ", description=" + description + ", itemDetails=" + itemDetails + '}';
+    }
+
 }

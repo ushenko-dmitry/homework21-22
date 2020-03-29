@@ -13,11 +13,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import ru.mail.dimaushenko.service.ShopService;
+import ru.mail.dimaushenko.service.model.PaginationDTO;
 import ru.mail.dimaushenko.service.model.ShopDTO;
+import ru.mail.dimaushenko.service.model.ShopsFilterDTO;
+import ru.mail.dimaushenko.service.model.ViewShopsDTO;
+import static ru.mail.dimaushenko.webmodule.constants.FilterConstants.DEFAULT_FILTER_SHOPS_LOCATION;
+import static ru.mail.dimaushenko.webmodule.constants.PaginationConstants.DEFAULT_CURRENT_PAGE;
+import static ru.mail.dimaushenko.webmodule.constants.PaginationConstants.DEFAULT_ITEMS_PER_PAGE;
 
 @Controller
 @RequestMapping("/shops")
+@SessionAttributes(types = ViewShopsDTO.class)
 public class ShopController {
 
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -28,9 +36,18 @@ public class ShopController {
     }
 
     @GetMapping()
-    public String getShops(Model model) {
-        List<ShopDTO> shops = shopService.getShops();
-        model.addAttribute("shops", shops);
+    public String getShops(
+            ViewShopsDTO viewShopsDTO,
+            Model model
+    ) {
+        PaginationDTO pagination = setPagination(viewShopsDTO.getPagination());
+        viewShopsDTO.setPagination(pagination);
+        ShopsFilterDTO filter = setFilter(viewShopsDTO.getFilter());
+        viewShopsDTO.setFilter(filter);
+        List<ShopDTO> shops = shopService.getShops(pagination, filter);
+        viewShopsDTO.setShops(shops);
+
+        model.addAttribute("viewShops", viewShopsDTO);
         return "shops";
     }
 
@@ -58,6 +75,41 @@ public class ShopController {
         for (ObjectError error : allErrors) {
             logger.error("Error with add shop: " + error.getObjectName() + " - " + error.getDefaultMessage());
         }
+    }
+
+    private PaginationDTO setPagination(PaginationDTO pagination) {
+        if (pagination == null) {
+            pagination = new PaginationDTO();
+        }
+        if (pagination.getCurrentPage() == null) {
+            pagination.setCurrentPage(DEFAULT_CURRENT_PAGE);
+        }
+        if (pagination.getElementsPerPage() == null) {
+            pagination.setElementsPerPage(DEFAULT_ITEMS_PER_PAGE);
+        }
+        Integer amountShops = shopService.getAmountShops();
+        Integer amountPages = amountShops / pagination.getElementsPerPage();
+        if (amountShops % pagination.getElementsPerPage() > 0) {
+            amountPages++;
+        }
+        if (amountPages == 0) {
+            amountPages++;
+        }
+        pagination.setAmountPages(amountPages);
+        if (pagination.getAmountPages() < pagination.getCurrentPage()) {
+            pagination.setCurrentPage(1);
+        }
+        return pagination;
+    }
+
+    private ShopsFilterDTO setFilter(ShopsFilterDTO filter) {
+        if (filter == null) {
+            filter = new ShopsFilterDTO();
+        }
+        if (filter.getLocation() == null) {
+            filter.setLocation(DEFAULT_FILTER_SHOPS_LOCATION);
+        }
+        return filter;
     }
 
 }

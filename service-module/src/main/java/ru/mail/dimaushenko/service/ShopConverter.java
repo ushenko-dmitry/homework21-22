@@ -5,7 +5,7 @@ import ru.mail.dimaushenko.repository.model.Shop;
 import ru.mail.dimaushenko.service.model.ShopDTO;
 import ru.mail.dimaushenko.service.model.ShopWithItemsDTO;
 
-public interface ShopConvertService extends GeneralConvertService<ShopDTO, Shop> {
+public interface ShopConverter extends GeneralConverter<ShopDTO, Shop> {
 
     ShopWithItemsDTO getShopWithItemsDTOFromObject(Shop shops);
 

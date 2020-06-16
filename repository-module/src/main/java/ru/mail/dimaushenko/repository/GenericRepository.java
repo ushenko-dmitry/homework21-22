@@ -1,6 +1,7 @@
 package ru.mail.dimaushenko.repository;
 
 import java.util.List;
+import ru.mail.dimaushenko.repository.model.Pagination;
 
 public interface GenericRepository<I, T> {
 
@@ -14,4 +15,7 @@ public interface GenericRepository<I, T> {
 
     List<T> findAll();
 
+    List<T> findLimit(Pagination pagination);
+
+    Integer getAmountElements();
 }

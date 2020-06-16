@@ -5,27 +5,61 @@
         <meta charset="UTF-8"/>
     </head>
     <body>
+        <!-- FILTER -->
+        <div>Filter</div>
+        <div>
+            <form th:action="@{/shops}" method="GET" th:object="${viewShops.filter}">
+                Location: <input type="text" name="location" placeholder="Location" th:field="*{location}"/><br/>
+                <input type="submit" value="Apply filter"/>
+            </form>
+        </div>
+        <!-- MAIN CONTAINER -->
         <div>Shops</div>
-        <table>
+        <table border="1">
             <thead>
                 <tr>
                     <td>№</td>
                     <td>Name</td>
-                    <td>Description</td>
-                    <td>Price</td>
+                    <td>Location</td>
                 </tr>
             </thead>
-            <tbody th:each="shop, stat : ${shops}">
+            <tbody th:each="shop, stat : ${viewShops.shops}">
                 <tr>
                     <td th:text="${shop.id}">0</td>
                     <td th:text="${shop.name}">Item 0</td>
-                    <td th:text="${shop.location}">Description 0</td>
+                    <td th:text="${shop.location}">Location 0</td>
                 </tr>
             </tbody>
         </table>
+        <!-- PAGINATION -->
+        <div>
+            <div>
+                <p>Pages: <span></span></p>
+            </div>
+            <ul th:object="${viewShops.pagination}">
+                <th:block th:unless="*{currentPage == 1}">
+                    <li><a th:href="@{/shops(pagination.currentPage=*{currentPage - 1}, pagination.elementsPerPage=*{elementsPerPage})}">Back</a></li>
+                </th:block>
+                <li><a th:href="@{/shops(pagination.currentPage=*{currentPage}, pagination.elementsPerPage=*{elementsPerPage})}" th:text="*{currentPage}">page</a></li>
+                <th:block th:unless="*{currentPage == amountPages}">
+                    <li><a th:href="@{/shops(pagination.currentPage=*{currentPage + 1}, pagination.elementsPerPage=*{elementsPerPage})}">Next</a></li>
+                </th:block>
+            </ul>
+            <div>
+                <form method="GET" th:action="@{/shops}" th:object="${viewShops.pagination}" >
+                    <span>Shops per page: </span>
+                    <input type="hidden" name="currentPage" value="1" th:value="*{currentPage}" th:field="*{currentPage}"/>
+                    <select name="elementsPerPage" th:value="*{elementsPerPage}" th:field="*{elementsPerPage}">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                    <input type="submit" value="Apply"/>
+                </form>
+            </div>
+        </div>
 
-
-        <a th:href="@{/add_shop}">Add Shop</a><br/>
+        <a th:href="@{/shops/add}">Add Shop</a><br/>
         <a th:href="@{/}">Back</a>
     </body>
 </html>

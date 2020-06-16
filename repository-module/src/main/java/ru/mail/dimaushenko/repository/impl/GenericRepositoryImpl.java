@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import ru.mail.dimaushenko.repository.GenericRepository;
+import ru.mail.dimaushenko.repository.model.Pagination;
 
 public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I, T> {
 
@@ -47,4 +48,23 @@ public abstract class GenericRepositoryImpl<I, T> implements GenericRepository<I
         return query.getResultList();
     }
 
+    @Override
+    public List<T> findLimit(Pagination pagination) {
+        String queryString = "from " + entityClass.getName() + " c";
+        Query query = entityManager.createQuery(queryString);
+        query.setFirstResult(pagination.getStartElement());
+        query.setMaxResults(pagination.getElementsPerPage());
+        List resultList = query.getResultList();
+        return resultList;
+    }
+
+    @Override
+    public Integer getAmountElements(){
+        String queryString = "SELECT count(id) FROM " + entityClass.getName() + " c";
+        Query query = entityManager.createQuery(queryString);
+        Long count = (Long) query.getSingleResult();
+        return count.intValue();
+    }
+
+    
 }

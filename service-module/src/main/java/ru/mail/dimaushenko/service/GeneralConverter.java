@@ -2,7 +2,7 @@ package ru.mail.dimaushenko.service;
 
 import java.util.List;
 
-public interface GeneralConvertService<DTO, O> {
+public interface GeneralConverter<DTO, O> {
 
     DTO getDTOFromObject(O model);
 

@@ -1,18 +1,19 @@
 package ru.mail.dimaushenko.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.mail.dimaushenko.repository.model.Item;
 import ru.mail.dimaushenko.repository.model.ItemDetails;
-import ru.mail.dimaushenko.service.model.ItemDTO;
-import ru.mail.dimaushenko.service.ItemConvertService;
+import ru.mail.dimaushenko.service.ItemConverter;
 import ru.mail.dimaushenko.service.model.AddItemDTO;
+import ru.mail.dimaushenko.service.model.ItemDTO;
 import ru.mail.dimaushenko.service.model.ItemDetailsDTO;
 import ru.mail.dimaushenko.service.model.ItemWithShopsDTO;
 
 @Component
-public class ItemConvertServiceImpl implements ItemConvertService {
+public class ItemConverterImpl implements ItemConverter {
 
     @Override
     public ItemDTO getDTOFromObject(Item item) {
@@ -57,13 +58,13 @@ public class ItemConvertServiceImpl implements ItemConvertService {
     @Override
     public Item getObjectFromDTO(AddItemDTO itemDTO) {
         Item item = new Item();
-        item.setId(itemDTO.getId());
         item.setName(itemDTO.getName());
         item.setDescription(itemDTO.getDescription());
 
         ItemDetails itemDetails = new ItemDetails();
         itemDetails.setItem(item);
-        itemDetails.setPrice(itemDTO.getItemDetails().getPrice());
+        BigDecimal price = new BigDecimal(itemDTO.getPrice());
+        itemDetails.setPrice(price);
         item.setItemDetails(itemDetails);
         return item;
     }

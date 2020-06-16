@@ -37,8 +37,10 @@
                 </tr>
                 <th:block th:if="${#lists.size(item.shops)} > 0">
                     <th:block th:each="shop, stat : *{shops}">
-                        <td th:unless="${stat.first}" th:text="${shop.name}">Shop2</td>
-                        <td th:unless="${stat.first}" th:text="${shop.location}">Shop2</td>
+                        <tr th:unless="${stat.first}">
+                            <td th:text="${shop.name}">Shop2</td>
+                            <td th:text="${shop.location}">Shop2</td>
+                        </tr>
                     </th:block>
                 </th:block>
             </tbody>

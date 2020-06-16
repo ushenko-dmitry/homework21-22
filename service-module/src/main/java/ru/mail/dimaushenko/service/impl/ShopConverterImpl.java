@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.mail.dimaushenko.repository.model.Item;
 import ru.mail.dimaushenko.repository.model.Shop;
-import ru.mail.dimaushenko.service.ItemConvertService;
-import ru.mail.dimaushenko.service.ShopConvertService;
 import ru.mail.dimaushenko.service.model.ItemDTO;
 import ru.mail.dimaushenko.service.model.ShopDTO;
 import ru.mail.dimaushenko.service.model.ShopWithItemsDTO;
+import ru.mail.dimaushenko.service.ItemConverter;
+import ru.mail.dimaushenko.service.ShopConverter;
 
 @Component
-public class ShopConvertServiceImpl implements ShopConvertService {
+public class ShopConverterImpl implements ShopConverter {
 
-    private final ItemConvertService itemConvertService;
+    private final ItemConverter itemConverter;
 
-    public ShopConvertServiceImpl(ItemConvertService itemConvertService) {
-        this.itemConvertService = itemConvertService;
+    public ShopConverterImpl(ItemConverter itemConverter) {
+        this.itemConverter = itemConverter;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ShopConvertServiceImpl implements ShopConvertService {
         shopWithItemsDTO.setName(shop.getName());
         shopWithItemsDTO.setLocation(shop.getLocation());
 
-        List<ItemDTO> items = itemConvertService.getDTOFromObject(shop.getItems());
+        List<ItemDTO> items = itemConverter.getDTOFromObject(shop.getItems());
         shopWithItemsDTO.setItems(items);
         return shopWithItemsDTO;
     }
@@ -84,7 +84,7 @@ public class ShopConvertServiceImpl implements ShopConvertService {
         shop.setName(shopDTO.getName());
         shop.setLocation(shopDTO.getLocation());
 
-        List<Item> items = itemConvertService.getObjectFromDTO(shopDTO.getItems());
+        List<Item> items = itemConverter.getObjectFromDTO(shopDTO.getItems());
         shop.setItems(items);
         return shop;
     }

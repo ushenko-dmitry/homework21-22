@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Items</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <!-- FILTER -->
+        <div>Filter</div>
+        <div>
+            <form th:action="@{/items}" method="GET" th:object="${viewItems.filter}">
+                Name: <input type="text" name="name" placeholder="Name" th:field="*{name}"/><br/>
+<!--                <span th:errors="*{priceMin}">price error</span>
+                <span th:errors="*{priceMax}">price error</span>-->
+                Price: <input type="text" name="priceMin" placeholder="0.00" th:field="*{priceMin}"/>-
+                <input type="text" name="priceMax" placeholder="0.00" th:field="*{priceMax}"/>
+                <input type="submit" value="Apply filter"/>
+            </form>
+        </div>
+        <br/>
+        <!-- MAIN CONTAINER -->
+        <div>Items</div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Description</td>
+                    <td>Price</td>
+                    <td>Show</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody th:each="item, stat : ${viewItems.items}">
+                <tr>
+                    <td th:text="${item.id}">0</td>
+                    <td th:text="${item.name}">Item 0</td>
+                    <td th:text="${item.description}">Description 0</td>
+                    <td th:text="${item.itemDetails.price}">Price 0</td>
+                    <td><form method="GET" th:action="@{/items/{id}/(id=${item.id})}"><input type="submit" value="Show"/></form></td>
+                    <td><form method="GET" th:action="@{/items/{id}/remove(id=${item.id})}"><input type="submit" value="Delete"/></form></td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <!-- PAGINATION -->
+        <div>
+            <div>
+                <p>Pages: <span></span></p>
+            </div>
+            <ul th:object="${viewItems.pagination}">
+                <th:block th:unless="*{currentPage == 1}">
+                    <li><a th:href="@{/items(pagination.currentPage=*{currentPage - 1}, pagination.elementsPerPage=*{elementsPerPage})}">Back</a></li>
+                </th:block>
+                <li><a th:href="@{/items(pagination.currentPage=*{currentPage}, pagination.elementsPerPage=*{elementsPerPage})}" th:text="*{currentPage}">page</a></li>
+                <th:block th:unless="*{currentPage == amountPages}">
+                    <li><a th:href="@{/items(pagination.currentPage=*{currentPage + 1}, pagination.elementsPerPage=*{elementsPerPage})}">Next</a></li>
+                </th:block>
+            </ul>
+            <div>
+                <form method="GET" th:action="@{/items}" th:object="${viewItems.pagination}" >
+                    <span>Items per page: </span>
+                    <input type="hidden" name="currentPage" value="1" th:value="*{currentPage}" th:field="*{currentPage}"/>
+                    <select name="elementsPerPage" th:value="*{elementsPerPage}" th:field="*{elementsPerPage}">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                    <input type="submit" value="Apply"/>
+                </form>
+            </div>
+        </div>
+        <a th:href="@{/items/add}">Add item</a><br/>
+        <a th:href="@{/}">Back</a>
+    </body>
+</html>

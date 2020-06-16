@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Item</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <div>Item</div>
+        <table border="1" th:object="${item}">
+            <thead>
+                <tr>
+                    <td colspan="3">Item</td>
+                    <td colspan="2">Shop</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>Description</td>
+                    <td>Price</td>
+                    <td>Name</td>
+                    <td>Location</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td th:rowspan="${#lists.size(item.shops)}" th:text="*{name}">Name</td>
+                    <td th:rowspan="${#lists.size(item.shops)}" th:text="*{description}">Description</td>
+                    <td th:rowspan="${#lists.size(item.shops)}" th:text="*{itemDetails.price}">Price</td>
+                    <th:block th:if="${#lists.size(item.shops)} > 0">
+                        <th:block th:each="shop, stat : *{shops}">
+                            <td th:if="${stat.first}" th:text="${shop.name}">Shop1</td>
+                            <td th:if="${stat.first}" th:text="${shop.location}">Shop1</td>
+                        </th:block>
+                    </th:block>
+                    <th:block th:unless="${#lists.size(item.shops)} > 0">
+                        <td colspan="2">Shop is not found</td>
+                    </th:block>
+                </tr>
+                <th:block th:if="${#lists.size(item.shops)} > 0">
+                    <th:block th:each="shop, stat : *{shops}">
+                        <tr th:unless="${stat.first}">
+                            <td th:text="${shop.name}">Shop2</td>
+                            <td th:text="${shop.location}">Shop2</td>
+                        </tr>
+                    </th:block>
+                </th:block>
+            </tbody>
+        </table>
+        <a th:href="@{/items}">Back</a>
+    </body>
+</html>
